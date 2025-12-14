@@ -22,6 +22,7 @@ This configuration forwards all DNS queries to a list of trusted DoT resolvers.
 2.  Create the file `unbound_custom.conf` in the following directory: `~/.firewalla/config/unbound_local/`.
 3.  Copy the contents of this configuration into the new file.
 4.  Restart your Firewalla's DNS service from the app, or simply reboot the device for the changes to take effect.
+5.  If you want to double check that it is working, uncomment the verbosity, change it to 4, restart Unbound, and navigate some websites and then look at the logs.  You should see what's happening under the hood.  When you are satisfied with how it is working, either # verbosity back out or change it to 1, which is the default.
 
 ---
 
