@@ -12,6 +12,7 @@ This configuration forwards all DNS queries to a list of trusted DoT resolvers.
 * **`forward-addr`**: This specifies the DoT servers to use. The format is `IP_ADDRESS@PORT#SERVER_HOSTNAME`. The hostname is used to validate the TLS certificate, ensuring you're talking to the correct server.
 * **Server Selection**: You can list multiple DoT providers (like Cloudflare, Google, and Quad9 in the example). `unbound` is smart—it monitors the performance of these servers and will prioritize using the fastest, most responsive one for your queries.
 * **Fallback**: The `forward-first: yes` setting tells `unbound` to try the DoT forwarders first. If for some reason all of them are unreachable, `unbound` will automatically fall back to its default behavior of resolving domains itself (acting as a recursive resolver). This ensures your internet connection never breaks due to a DoT outage.
+* This will use IPv6 for DNS if available and faster than IPv4.  It is a dual stack setup with Unbound choosing the protcol that works best for the current conditions.
 
 ---
 
