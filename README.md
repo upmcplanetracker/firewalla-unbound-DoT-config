@@ -2,7 +2,7 @@
 
 This is a supplemental `unbound` configuration for your Firewalla device. It enhances your network's privacy and security by enabling DNS over TLS (DoT), with a robust fallback to standard DNS resolution if DoT servers are unavailable.
 
-This configuration forwards all DNS queries to a list of trusted DoT resolvers.
+This configuration forwards all DNS queries to a list of trusted DoT resolvers.  Like DoH, DoT encrypts traffic to and from the DNS resolver.  The traffic between the DNS resolver and the root server is unencrypted - this is all DNS traffic, not just this setup.
 
 ---
 
