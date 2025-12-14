@@ -13,7 +13,7 @@ This configuration forwards all DNS queries to a list of trusted DoT resolvers.
 * **Server Selection**: You can list multiple DoT providers (like Cloudflare, Google, and Quad9 in the example). `unbound` is smart—it monitors the performance of these servers and will prioritize using the fastest, most responsive one for your queries.
 * **Fallback**: The `forward-first: yes` setting tells `unbound` to try the DoT forwarders first. If for some reason all of them are unreachable, `unbound` will automatically fall back to its default behavior of resolving domains itself (acting as a recursive resolver). This ensures your internet connection never breaks due to a DoT outage.
 * This will use IPv6 for DNS if available and faster than IPv4.  It is a dual stack setup with Unbound choosing the protcol that works best for the current conditions.  I purposefully left out prefer-ipv6 because with that on it will prefer IPv6 for DNS even if the IPv6 DNS performance is worse than IPv4.  This is built for speed, not for IPv6 only.
-* DNSSEC should already be enabled on the Firewalla end for their version of Unbound.  You shouldn't need to add anthing to the .conf to keep DNSSEC functioning. Check with `dig sigok.verteiltesysteme.net @127.0.0.1 -p 8953` and `dig sigfail.verteiltesysteme.net @127.0.0.1 -p 8953`
+* DNSSEC should already be enabled on the Firewalla end for their version of Unbound.  You shouldn't need to add anthing to the .conf to keep DNSSEC functioning. Check with `dig sigok.verteiltesysteme.net @127.0.0.1 -p 8953` and `dig sigfail.verteiltesysteme.net @127.0.0.1 -p 8953`.
 
 ---
 
