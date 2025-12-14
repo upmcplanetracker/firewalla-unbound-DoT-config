@@ -49,8 +49,8 @@ If you have a device with ample memory, follow these steps carefully:
 
 1.  **Start with the cache disabled.** Comment out these two lines with a `#` to begin:
     ```
-    # msg-cache-size: 256m
-    # rrset-cache-size: 512m
+    # msg-cache-size: 4m
+    # rrset-cache-size: 8m
     ```
 2.  **Monitor your system.** Connect via SSH and run `htop` or `top` to check your baseline memory usage.
 3.  **Enable with small values.** Uncomment the lines and start with very small values. A good starting point is `4m` and `8m`:
