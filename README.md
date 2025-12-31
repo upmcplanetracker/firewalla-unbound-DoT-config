@@ -59,7 +59,7 @@ If you have a device with ample memory, follow these steps carefully:
     rrset-cache-size: 8m
     ```
 4.  **Increase slowly.** If your system remains stable after a day, you can slowly increase the values. Try doubling them (`8m`/`16m`, then `16m`/`32m`) and monitor memory usage at each step.
-5.  **Find your limit.** The `256m`/`512m` values in the example are **extremely aggressive** and should only be used on a device like the Firewalla Gold Pro with a lot of spare built in RAM. For most other devices, a value between `16m`/`32m` and `64m`/`128m` is more than sufficient.  Use `htop` or `top` to watch memory usage after adjusting the buffer sizes.
+5.  **Find your limit.** `256m`/`512m` are **extremely aggressive** and should only be used on a device like the Firewalla Gold Pro with a lot of spare built in RAM. For most other devices, a value between `16m`/`32m` and `64m`/`128m` is more than sufficient.  Use `htop` or `top` to watch memory usage after adjusting the buffer sizes.
 
 ### A Warning for Firewalla Purple / Purple SE Users (and most likely Red and Blue)
 The **Firewalla Purple and Purple SE** have limited RAM. It is **strongly recommended** that you keep the cache settings **commented out** on these devices. Enabling a large memory cache is very likely to cause instability. If you do experiment, use only the smallest values (`4m`/`8m`) and monitor memory very closely.
