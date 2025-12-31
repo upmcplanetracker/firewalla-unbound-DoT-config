@@ -39,8 +39,8 @@ A good resource for finding more DoT servers is the [DNS Privacy Project](https:
 
 This configuration includes two lines to increase the DNS cache size:
 server:
-`msg-cache-size: 256m`
-`rrset-cache-size: 512m`
+`msg-cache-size: 4m`
+`rrset-cache-size: 8m`
 
 These settings can significantly speed up browsing by storing more DNS responses in memory. However, allocating too much memory can crash the DNS service or make your Firewalla unstable.
 
