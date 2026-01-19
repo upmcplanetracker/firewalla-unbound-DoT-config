@@ -63,3 +63,7 @@ If you have a device with ample memory, follow these steps carefully:
 
 ### A Warning for Firewalla Purple / Purple SE Users (and most likely Red and Blue)
 The **Firewalla Purple and Purple SE** have limited RAM. It is **strongly recommended** that you keep the cache settings **commented out** on these devices. Enabling a large memory cache is very likely to cause instability. If you do experiment, use only the smallest values (`4m`/`8m`) and monitor memory very closely.
+
+### Disclaimer
+
+Not affiliated with or endorsed by Firewalla.
