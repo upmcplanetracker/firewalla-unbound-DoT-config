@@ -28,10 +28,9 @@ This configuration forwards all DNS queries to a list of trusted DoT resolvers. 
 
 ## Customization ⚙️
 
-You are free to customize the list of DNS servers. You can add, remove, or change any of the `forward-addr` lines to use your preferred DoT providers. Just ensure you follow the correct format.
-
+- You are free to customize the list of DNS servers. You can add, remove, or change any of the `forward-addr` lines to use your preferred DoT providers. Just ensure you follow the correct format.
 A good resource for finding more DoT servers is the [DNS Privacy Project](https://dnsprivacy.org/public_resolvers/).
-
+- I have left the `prefer-ip4: no` and `prefer-ip6: no` commented out. The default setting is for Unbound to prefer DNS over IPv4.  If you have IPv6 enabled, uncomment both lines and restart Unbound and this will allow Unbound to do DNS both over IPv4 and IPv6.
 ---
 
 ## ⚠️ A Critical Note on Memory and Cache Configuration
