@@ -2,8 +2,7 @@
 
 This is a supplemental `unbound` configuration for your Firewalla device. It enhances your network's privacy and security by enabling DNS over TLS (DoT), with a robust fallback to standard DNS resolution if DoT servers are unavailable.
 
-This configuration forwards all DNS queries to a list of trusted DoT resolvers.  Like DoH, DoT encrypts traffic to and from the DNS resolver.  The traffic between the DNS resolver and the root server is unencrypted - this is all DNS traffic, not just this setup.
-
+This configuration forwards all DNS queries to a list of trusted DoT resolvers.  Like DoH, DoT encrypts traffic to and from the DNS resolver.  The traffic between the DNS resolver and the root server is unencrypted - this is true for 99.9999% of DNS traffic, not just this setup.
 ---
 
 ## How It Works 🧐
@@ -22,7 +21,7 @@ This configuration forwards all DNS queries to a list of trusted DoT resolvers. 
 1.  SSH into your Firewalla device.
 2.  Create the file `unbound_custom.conf` in the following directory: `~/.firewalla/config/unbound_local/`.
 3.  Copy the contents of this configuration into the new file.
-4.  Restart your Firewalla's DNS service from the app, or simply reboot the device for the changes to take effect.
+4.  Restart your Firewalla's DNS service from the app (i.e., turn off the slider and then turn it back on), or `sudo systemctl restart unbound`. Once Unbound is restarted, you can check the status with `sudo systemctl status unbound`.
 5.  If you want to double check that it is working, uncomment the verbosity, change it to 4, restart Unbound, and navigate some websites and then look at the logs.  You should see what's happening under the hood.  When you are satisfied with how it is working, either # verbosity back out or change it to 1, which is the default.
 
 ---
@@ -44,7 +43,7 @@ server:
 
 These settings can significantly speed up browsing by storing more DNS responses in memory. However, allocating too much memory can crash the DNS service or make your Firewalla unstable.
 
-### Tuning a Firewalla Gold series
+### A Guide To Extremely Unaggresively Tuning a Firewalla Gold series or Firewalla Orange
 If you have a device with ample memory, follow these steps carefully:
 
 1.  **Start with the cache disabled.** Comment out these two lines with a `#` to begin:
@@ -52,18 +51,26 @@ If you have a device with ample memory, follow these steps carefully:
     # msg-cache-size: 4m
     # rrset-cache-size: 8m
     ```
-2.  **Monitor your system.** Connect via SSH and run `htop` or `top` to check your baseline memory usage.
+2.  **Monitor your system.** Connect via SSH and run `htop` or `top` to check your baseline memory usage while surfing the web from a device on your network.
 3.  **Enable with small values.** Uncomment the lines and start with very small values. A good starting point is `4m` and `8m`:
     ```
     msg-cache-size: 4m
     rrset-cache-size: 8m
     ```
 4.  **Increase slowly.** If your system remains stable after a day, you can slowly increase the values. Try doubling them (`8m`/`16m`, then `16m`/`32m`) and monitor memory usage at each step.
-5.  **Find your limit.** `256m`/`512m` are **extremely aggressive** and should only be used on a device like the Firewalla Gold Pro with a lot of spare built in RAM. For most other devices, a value between `16m`/`32m` and `64m`/`128m` is more than sufficient.  Use `htop` or `top` to watch memory usage after adjusting the buffer sizes.
+5.  **Find your limit.** `256m`/`512m` are **extremely aggressive** and should only be used on a device like the Firewalla Gold Pro with a lot of spare built in RAM. For most other devices, a value between `16m`/`32m` and `64m`/`128m` is more than sufficient.  Always remember to use `htop` or `top` to watch memory usage after adjusting the buffer sizes while surfing the web to generate network traffic.
 
 ### A Warning for Firewalla Purple / Purple SE Users (and most likely Red and Blue)
 The **Firewalla Purple and Purple SE** have limited RAM. It is **strongly recommended** that you keep the cache settings **commented out** on these devices. Enabling a large memory cache is very likely to cause instability. If you do experiment, use only the smallest values (`4m`/`8m`) and monitor memory very closely.
 
-### Disclaimer
+### How to Bail!
+Suppose you screw something up and Unbound won't run. This is easy to fix. 
 
-Not affiliated with or endorsed by Firewalla.
+```
+rm -R ~/.firewalla/config/unbound_local/*
+sudo systemctl restart unbound
+```
+This will take Unbound back to the default Firewalla setup.
+
+### Disclaimer
+Not affiliated with or endorsed by Firewalla. Not responsible if this bricks your device, but it really shouldn't.
