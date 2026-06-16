@@ -70,10 +70,11 @@ Customization
 
 **IPv6 is disabled by default** in this configuration. If your network supports IPv6:
 
-1.  Uncomment `do-ip6: yes`
-2.  Also uncomment the IPv6 `forward-addr` entries for your chosen providers
-3.  Optionally, uncomment `prefer-ip6: yes` to prioritize IPv6 over IPv4
-4.  Restart Unbound
+1. Uncomment `do-ip6: yes`
+2. Also uncomment the IPv6 `forward-addr` entries for your chosen providers
+3. Restart Unbound
+
+**Important**: Leave both `prefer-ip4: no` and `prefer-ip6: no` as-is (commented out or set to `no`). When both are set to `no`, Unbound will use the fastest performing server regardless of protocol. If you set one to `yes`, Unbound will stubbornly prefer that protocol even when the other is performing better—which can actually hurt performance.
 
 **If you don't have IPv6**, leave `# do-ip6: yes` commented out—this prevents unnecessary connection attempts and avoids potential resolution delays.
 
