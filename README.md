@@ -24,6 +24,8 @@ This configuration tells Unbound to forward all DNS queries to trusted DoT resol
 
 The first should return `NOERROR`, the second should return `SERVFAIL`.
 
+* * *
+
 Installation
 ------------
 
@@ -42,7 +44,8 @@ Installation
         sudo systemctl restart unbound
     
     Or toggle DNS off/on in the Firewalla app
-    
+
+* * *
 
 Verification
 ------------
@@ -57,6 +60,8 @@ To see detailed query activity (temporary):
 2.  Restart Unbound
 3.  Browse websites and check logs: `sudo journalctl -u unbound -f`
 4.  Reset verbosity to `1` (or comment it out) when done
+
+* * *
 
 Customization
 -------------
@@ -82,6 +87,8 @@ Additional providers:
 *   **NextDNS**: `45.90.28.0@853#dns.nextdns.io` / `45.90.30.0@853#dns.nextdns.io`
 
 More servers: [DNS Privacy Project](https://dnsprivacy.org/wiki/display/DP/Public+Resolvers)
+
+* * *
 
 Memory & Cache Tuning
 ---------------------
@@ -111,6 +118,7 @@ The configuration includes commented cache settings:
 
 > **⚠️ Important**: Always monitor memory usage with `htop` after changes while generating network traffic.
 
+* * *
 
 Troubleshooting
 ---------------
@@ -133,6 +141,7 @@ This restores the default Firewalla Unbound configuration.
     # Verify no DNS leaks to your ISP
     dig whoami.akamai.net @127.0.0.1 -p 8953
     
+* * *
 
 Configuration File
 ------------------
@@ -174,7 +183,6 @@ Configuration File
         # forward-addr: 2620:fe::fe@853#dns.quad9.net
         # forward-addr: 2620:fe::9@853#dns.quad9.net
     
-
 * * *
 
 Disclaimer
