@@ -111,25 +111,6 @@ The configuration includes commented cache settings:
 
 > **⚠️ Important**: Always monitor memory usage with `htop` after changes while generating network traffic.
 
-### Hardware Recommendations
-
-Device
-
-Recommended Limit
-
-Gold Pro
-
-Up to `256m`/`512m`
-
-Gold/Orange
-
-`64m`/`128m` max
-
-Purple, Purple SE, Red, Blue
-
-**Keep commented out** (limited RAM)
-
-**⚠️ Important**: Always monitor memory usage with `htop` after changes while generating network traffic.
 
 Troubleshooting
 ---------------
