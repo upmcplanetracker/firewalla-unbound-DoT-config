@@ -90,7 +90,7 @@ Additional providers:
 *   **Control-D**: `76.76.2.0@853#dns.controld.com` / `76.76.10.0@853#dns.controld.com`
 *   **NextDNS**: `45.90.28.0@853#dns.nextdns.io` / `45.90.30.0@853#dns.nextdns.io`
 
-More servers: [DNS Privacy Project](https://dnsprivacy.org/wiki/display/DP/Public+Resolvers)
+More servers: [DNS Privacy Project](https://dnsprivacy.org/public_resolvers/#dns-over-tls-dot)
 
 * * *
 
