@@ -36,10 +36,13 @@ Installation
     
 3.  **Create** `unbound_custom.conf` in that directory:
     
+        sudo unalias apt
+        sudo apt update && sudo apt install nano
+        # never run sudo apt upgrade as this will break your firewalla
         nano ~/.firewalla/config/unbound_local/unbound_custom.conf
     
-4.  **Paste** the configuration contents into the file and save
-5.  **Restart** Unbound:
+5.  **Paste** the configuration contents into the file and save
+6.  **Restart** Unbound:
     
         sudo systemctl restart unbound
     
@@ -114,7 +117,7 @@ The configuration includes commented cache settings:
 | Device | Recommended Limit |
 |--------|-------------------|
 | Gold Pro | Up to `256m`/`512m` |
-| Gold/Orange | `64m`/`128m` max |
+| Gold, Plus, SE /Orange | `64m`/`128m` max |
 | Purple, Purple SE, Red, Blue | **Keep commented out** (limited RAM) |
 
 > **⚠️ Important**: Always monitor memory usage with `htop` after changes while generating network traffic.
