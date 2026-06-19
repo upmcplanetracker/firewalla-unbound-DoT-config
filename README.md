@@ -5,10 +5,10 @@ This supplemental configuration enables DNS over TLS (DoT) for your Firewalla de
 
 > **Note**: DNS traffic between the upstream resolver and authoritative root servers remains unencrypted—this is standard for virtually all DNS resolutions, regardless of setup.
 
-A Bit of Background Info
-------------------------
+Background Info
+---------------
 
-The stock unbound conf file is located `/home/pi/.firewalla/run/unbound/unbound.conf`.  It is editable but will get continually overwritten by Firewalla.  It looks like this:
+The stock unbound conf file is located `/home/pi/.firewalla/run/unbound/unbound.conf`.  It is editable but will get continually overwritten by Firewalla.
 ```
 server:
     # If no logfile is specified, syslog is used
@@ -159,7 +159,7 @@ Customization
 
 **IPv6 is enabled by default in the stock conf file** in this configuration. If your network supports IPv6:
 
-1. Also uncomment the IPv6 `forward-addr` entries for your chosen providers
+1. Uncomment the IPv6 `forward-addr` entries for your chosen providers
 2. Restart Unbound
 
 **Important**: Leave `prefer-ip4: no` as-is (commented out or set to `no`). The stock conf file already has `prefer-ip6: no`.  When both are set to `no`, Unbound will use the fastest performing server regardless of protocol. If you set one to `yes`, Unbound will stubbornly prefer that protocol even when the other is performing better—which can actually hurt performance.
@@ -232,6 +232,17 @@ This restores the default Firewalla Unbound configuration.
     
 * * *
 
+Monitoring
+----------
+
+To see the top 40 blocks over the past week: `sudo journalctl -u unbound --since "7 days ago" --no-pager | grep always_null | awk '{for(i=1;i<=NF;i++) if($i=="info:") print $(i+1)}' | sort | uniq -c | sort -nr | head -n 40`
+
+To see the top 20 blocks over the past 24 hours: `sudo journalctl -u unbound --since "24 hours ago" --no-pager | grep always_null | awk '{for(i=1;i<=NF;i++) if($i=="info:") print $(i+1)}' | sort | uniq -c | sort -nr | head -n 20`
+
+To watch blocks live: `sudo journalctl -u unbound -f | grep --line-buffered always_null`
+
+* * *
+
 Configuration File
 ------------------
 
@@ -241,7 +252,7 @@ server:
     # msg-cache-size: 4m
     # rrset-cache-size: 8m
     verbosity: 1
-    # stock default is 0
+    # stock conf default is 0
     log-local-actions: yes
     prefer-ip4: no
     # stock conf default is yes with "prefer-ip6: no" which will degrade DS performance
