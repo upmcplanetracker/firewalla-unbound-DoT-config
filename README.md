@@ -239,7 +239,8 @@ To see the top 40 blocks over the past week: `sudo journalctl -u unbound --since
 
 To see the top 20 blocks over the past 24 hours: `sudo journalctl -u unbound --since "24 hours ago" --no-pager | grep always_null | awk '{for(i=1;i<=NF;i++) if($i=="info:") print $(i+1)}' | sort | uniq -c | sort -nr | head -n 20`
 
-To watch blocks live: `sudo journalctl -u unbound -f | grep --line-buffered always_null`
+To watch blocks live: `sudo journalctl -u unbound -f -o cat | grep --line-buffered always_null` or `sudo journalctl -u unbound -f -o cat | grep --line-buffered -v "Empty markkey"`
+
 
 * * *
 
