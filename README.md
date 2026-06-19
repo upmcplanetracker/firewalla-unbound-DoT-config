@@ -260,6 +260,11 @@ server:
     harden-algo-downgrade: yes
     harden-below-nxdomain: yes
     # stock conf alreay has "harden-glue: yes" and "harden-dnssec-stripped: yes", these further increase security
+    jostle-timeout: 200
+    qname-minimisation: yes
+    so-reuseport: yes
+    harden-referral-path: yes
+    # some improvements for stuck DNS and extra hardening for edge cases
 
 forward-zone:
     name: "."
