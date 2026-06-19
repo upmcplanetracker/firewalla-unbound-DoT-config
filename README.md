@@ -5,6 +5,92 @@ This supplemental configuration enables DNS over TLS (DoT) for your Firewalla de
 
 > **Note**: DNS traffic between the upstream resolver and authoritative root servers remains unencrypted—this is standard for virtually all DNS resolutions, regardless of setup.
 
+A Bit of Background Info
+------------------------
+
+The stock unbound conf file is located `/home/pi/.firewalla/run/unbound/unbound.conf`.  It is editable but will get continually overwritten by Firewalla.  It looks like this:
+```
+server:
+    # If no logfile is specified, syslog is used
+    #logfile: ""
+    username: ""
+    chroot: ""
+    directory: "/home/pi/.firewalla/run/unbound"
+    pidfile: "/home/pi/.firewalla/run/unbound/unbound.pid"
+    do-daemonize: no
+
+    verbosity: 0
+
+    interface: 127.0.0.1
+    access-control: 127.0.0.1/32 allow
+    port: 8953
+
+    do-ip4: yes
+    do-ip6: yes
+
+    prefer-ip4: yes
+    prefer-ip6: no
+
+    do-udp: yes
+    do-tcp: yes
+
+
+    # Reduce latency
+    serve-expired: yes
+
+    msg-cache-size: 4m
+    rrset-cache-size: 8m
+
+    num-threads: 1
+    outgoing-range: 700
+    num-queries-per-thread: 350
+
+    outgoing-num-tcp: 150
+    incoming-num-tcp: 100
+
+    root-hints: "/home/pi/.firewalla/run/unbound/root.hints"
+    # Trust glue only if it is within the server's authority
+    harden-glue: yes
+
+    auto-trust-anchor-file: "/home/pi/.firewalla/run/unbound/root.key"
+    # Require DNSSEC data for trust-anchored zones, if such data is absent, the zone becomes BOGUS
+    harden-dnssec-stripped: yes
+
+    # Don't use Capitalization randomization as it known to cause DNSSEC issues sometimes
+    # see https://discourse.pi-hole.net/t/unbound-stubby-or-dnscrypt-proxy/9378 for further details
+    use-caps-for-id: no
+
+    # Reduce EDNS reassembly buffer size to avoid IP fragmentation.
+    edns-buffer-size: 1232
+
+    # Perform prefetching of close to expired message cache entries
+    # This only applies to domains that have been frequently queried
+    prefetch: yes
+    prefetch-key: yes
+
+    # minimum wait time for responses, increase if uplink is long. In msec.
+    infra-cache-min-rtt: 500
+
+    # Ensure privacy of local IP ranges
+    private-address: 192.168.0.0/16
+    private-address: 169.254.0.0/16
+    private-address: 172.16.0.0/12
+    private-address: 10.0.0.0/8
+    private-address: fd00::/8
+    private-address: fe80::/10
+
+remote-control:
+    control-enable: yes
+    control-interface: 127.0.0.1
+    control-port: 9053
+    control-use-cert: no
+
+include: /home/pi/.firewalla/config/unbound_local/*
+```
+As you can see by the include: line on the bottom, it loads all the parameters above and then tells Unbound to search in the local/user editable directory.  If the same settings are in the user config file, it will replace the current ones with those.
+
+* * *
+
 How It Works
 ------------
 
@@ -71,15 +157,14 @@ Customization
 
 ### IPv6 Configuration
 
-**IPv6 is disabled by default** in this configuration. If your network supports IPv6:
+**IPv6 is enabled by default in the stock conf file** in this configuration. If your network supports IPv6:
 
-1. Uncomment `do-ip6: yes`
-2. Also uncomment the IPv6 `forward-addr` entries for your chosen providers
-3. Restart Unbound
+1. Also uncomment the IPv6 `forward-addr` entries for your chosen providers
+2. Restart Unbound
 
-**Important**: Leave both `prefer-ip4: no` and `prefer-ip6: no` as-is (commented out or set to `no`). When both are set to `no`, Unbound will use the fastest performing server regardless of protocol. If you set one to `yes`, Unbound will stubbornly prefer that protocol even when the other is performing better—which can actually hurt performance.
+**Important**: Leave `prefer-ip4: no` as-is (commented out or set to `no`). The stock conf file already has `prefer-ip6: no`.  When both are set to `no`, Unbound will use the fastest performing server regardless of protocol. If you set one to `yes`, Unbound will stubbornly prefer that protocol even when the other is performing better—which can actually hurt performance.
 
-**If you don't have IPv6**, leave `# do-ip6: yes` commented out—this prevents unnecessary connection attempts and avoids potential resolution delays.
+**If you don't have IPv6**, you don't need to change anything.
 
 ### Adding/Removing DNS Servers
 
@@ -97,7 +182,7 @@ More servers: [DNS Privacy Project](https://dnsprivacy.org/public_resolvers/#dns
 Memory & Cache Tuning
 ---------------------
 
-The configuration includes commented cache settings:
+The configuration includes commented cache settings that are already implemented in the stock unbound conf file:
 
     # msg-cache-size: 4m
     # rrset-cache-size: 8m
@@ -150,42 +235,43 @@ This restores the default Firewalla Unbound configuration.
 Configuration File
 ------------------
 
-    server:
-        tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
-        # msg-cache-size: 4m
-        # rrset-cache-size: 8m
-        prefetch: yes
-        prefetch-key: yes
-        # do-ip6: yes
-        # verbosity: 1
-        # prefer-ip4: no
-        # prefer-ip6: no
-    
-    forward-zone:
-        name: "."
-        forward-first: yes
-        forward-tls-upstream: yes
-    
-        # Cloudflare (IPv4)
-        forward-addr: 1.1.1.1@853#cloudflare-dns.com
-        forward-addr: 1.0.0.1@853#cloudflare-dns.com
-        # Cloudflare (IPv6 - uncomment if you have IPv6)
-        # forward-addr: 2606:4700:4700::1111@853#cloudflare-dns.com
-        # forward-addr: 2606:4700:4700::1001@853#cloudflare-dns.com
-    
-        # Google (IPv4)
-        forward-addr: 8.8.8.8@853#dns.google
-        forward-addr: 8.8.4.4@853#dns.google
-        # Google (IPv6 - uncomment if you have IPv6)
-        # forward-addr: 2001:4860:4860::8888@853#dns.google
-        # forward-addr: 2001:4860:4860::8844@853#dns.google
-    
-        # Quad9 (IPv4)
-        forward-addr: 9.9.9.9@853#dns.quad9.net
-        forward-addr: 149.112.112.112@853#dns.quad9.net
-        # Quad9 (IPv6 - uncomment if you have IPv6)
-        # forward-addr: 2620:fe::fe@853#dns.quad9.net
-        # forward-addr: 2620:fe::9@853#dns.quad9.net
+```
+server:
+    tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
+    # msg-cache-size: 4m
+    # rrset-cache-size: 8m
+    verbosity: 1
+    # stock default is 0
+    log-local-actions: yes
+    prefer-ip4: no
+    # stock conf default is yes with "prefer-ip6: no" which will degrade DS performance
+    harden-algo-downgrade: yes
+    harden-below-nxdomain: yes
+    # stock conf alreay has "harden-glue: yes" and "harden-dnssec-stripped: yes", these further increase security
+
+forward-zone:
+    name: "."
+    forward-first: yes
+    forward-tls-upstream: yes
+
+    # Cloudflare
+    forward-addr: 1.1.1.1@853#cloudflare-dns.com
+    forward-addr: 1.0.0.1@853#cloudflare-dns.com
+    # forward-addr: 2606:4700:4700::1111@853#cloudflare-dns.com
+    # forward-addr: 2606:4700:4700::1001@853#cloudflare-dns.com
+
+    # Google
+    forward-addr: 8.8.8.8@853#dns.google
+    forward-addr: 8.8.4.4@853#dns.google
+    # forward-addr: 2001:4860:4860::8888@853#dns.google
+    # forward-addr: 2001:4860:4860::8844@853#dns.google
+
+    # Quad9
+    forward-addr: 9.9.9.9@853#dns.quad9.net
+    forward-addr: 149.112.112.112@853#dns.quad9.net
+    # forward-addr: 2620:fe::fe@853#dns.quad9.net
+    # forward-addr: 2620:fe::9@853#dns.quad9.net
+```
     
 * * *
 
