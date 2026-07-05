@@ -122,9 +122,8 @@ Installation
     
 3.  **Create** `unbound_custom.conf` in that directory:
     
-        sudo unalias apt
-        sudo apt update && sudo apt install nano
         # never run sudo apt upgrade as this will break your firewalla
+        /home/pi/firewalla/scripts/apt-get.sh install nano
         nano ~/.firewalla/config/unbound_local/unbound_custom.conf
     
 5.  **Paste** the configuration contents into the file and save
