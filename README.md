@@ -87,18 +87,18 @@ remote-control:
 
 include: /home/pi/.firewalla/config/unbound_local/*
 ```
-As you can see by the include: line on the bottom, it loads all the parameters above and then tells Unbound to search in the local/user editable directory.  If the same settings are in the user config file, it will replace the current ones with those.
+As you can see by the include: line on the bottom, it loads all the parameters above and then tells Unbound to search in the local/user editable directory.  If the same settings are in the user config file, it will replace the default ones with the user ones.
 
 * * *
 
 How It Works
 ------------
 
-This configuration tells Unbound to forward all DNS queries to trusted DoT resolvers instead of performing recursive resolution itself. Here's what each part does:
+This configuration tells Unbound to forward all DNS queries with encryption to trusted DoT resolvers instead of performing plaintext recursive resolution itself. Here's what each part does:
 
 *   **`forward-tls-upstream: yes`** — This is the magic line. It tells Unbound to encrypt every forwarded query using TLS.
-*   **`forward-addr: IP@PORT#HOSTNAME`** — These are your upstream DoT servers. The `#HOSTNAME` part is critical—Unbound uses it to validate the server's TLS certificate, ensuring you're actually talking to Cloudflare, Google, or Quad9 and not some imposter.
-*   **`forward-first: yes`** — Try the DoT forwarders first. If _all_ of them are unreachable (rare, but possible), Unbound falls back to acting as a traditional recursive resolver. Your internet keeps working.
+*   **`forward-addr: IP@PORT#HOSTNAME`** — These are your upstream DoT servers. The `#HOSTNAME` part is critical—Unbound uses it to validate the server's TLS certificate, ensuring you're actually talking to Cloudflare, Google, Quad9, etc. and not some imposter.
+*   **`forward-first: yes`** — Try the DoT forwarders first. If _all_ of them are unreachable (rare, but possible), Unbound falls back to acting as a traditional plaintext recursive resolver. Your internet keeps working. When DoT becomes available again it will switch back to that.
 
 **Smart Server Selection**: Unbound doesn't just pick the first server in the list. It measures response times and automatically routes your queries to the fastest, most reliable server at any given moment.
 
@@ -132,7 +132,7 @@ Installation
     
         sudo systemctl restart unbound
     
-    Or toggle DNS off/on in the Firewalla app
+    Or toggle Unbound off/on in the Firewalla app
 
 * * *
 
@@ -157,12 +157,12 @@ Customization
 
 ### IPv6 Configuration
 
-**IPv6 is enabled by default in the stock conf file** in this configuration. If your network supports IPv6:
+**IPv6 is enabled by default in the stock conf file but the IPv6 resolvers are commented out**. If your network supports IPv6:
 
 1. Uncomment the IPv6 `forward-addr` entries for your chosen providers
 2. Restart Unbound
 
-**Important**: Leave `prefer-ip4: no` as-is (commented out or set to `no`). The stock conf file already has `prefer-ip6: no`.  When both are set to `no`, Unbound will use the fastest performing server regardless of protocol. If you set one to `yes`, Unbound will stubbornly prefer that protocol even when the other is performing better—which can actually hurt performance.
+**Important**: Leave `prefer-ip4: no` as-is (commented out or set to `no`). The stock conf file already has `prefer-ip6: no`.  When both are set to `no`, Unbound will use the fastest performing DNS server regardless of protocol. If you set one to `yes`, Unbound will stubbornly prefer that protocol even when the other is performing better—which can actually hurt performance.
 
 **If you don't have IPv6**, you don't need to change anything.
 
@@ -244,8 +244,8 @@ To watch blocks live: `sudo journalctl -u unbound -f -o cat | grep --line-buffer
 
 * * *
 
-Configuration File
-------------------
+User Configuration File
+-----------------------
 
 ```
 server:
@@ -295,4 +295,4 @@ forward-zone:
 Disclaimer
 ----------
 
-Not affiliated with or endorsed by Firewalla. Use at your own risk—testing on a non-production device first is recommended.
+Not affiliated with or endorsed by Firewalla. Use at your own risk. Testing on a non-production device first is recommended.
