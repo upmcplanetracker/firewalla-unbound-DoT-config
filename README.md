@@ -295,3 +295,8 @@ Disclaimer
 ----------
 
 Not affiliated with or endorsed by Firewalla. Use at your own risk. Testing on a non-production device first is recommended.
+
+If you are interested in this you may also be interested in my other Firewalla/Unbound repos-
+- [Build and user a newer version of Unbound than stock](https://github.com/upmcplanetracker/firewalla-update-unbound)
+- [Adding Huge Blocklists to FW via Unbound](https://github.com/upmcplanetracker/firewalla-huge-blocklists)
+- [Replacing FW Timekeeper with NTS via ntpd-rs](https://github.com/upmcplanetracker/ntpd-rs-nts-for-firewalla)
