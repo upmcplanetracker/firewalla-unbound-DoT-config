@@ -1,7 +1,7 @@
 Unbound DoT Custom Configuration for Firewalla
 ==============================================
 
-This supplemental configuration enables DNS over TLS (DoT) for your Firewalla device, encrypting DNS queries between your Firewalla and upstream resolvers for improved privacy.
+This supplemental configuration enables DNS over TLS (DoT) for your Firewalla device, encrypting DNS queries between your Firewalla and upstream resolvers for improved privacy.  It also hardens Unbound and offers performance inprovement.
 
 > **Note**: DNS traffic between the upstream resolver and authoritative root servers remains unencrypted—this is standard for virtually all DNS resolutions, regardless of setup.
 
@@ -175,6 +175,10 @@ Additional providers:
 *   **NextDNS**: `45.90.28.0@853#dns.nextdns.io` / `45.90.30.0@853#dns.nextdns.io`
 
 More servers: [DNS Privacy Project](https://dnsprivacy.org/public_resolvers/#dns-over-tls-dot)
+
+### If you're using an updated version of Unbound
+(from my repo [Firewalla-update-unbound](https://github.com/upmcplanetracker/firewalla-update-unbound))
+*   Uncomment the config changes you would like to enable in the sample conf file.
 
 * * *
 
